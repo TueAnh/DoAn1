@@ -1,6 +1,3 @@
-Code C++
---------------------------------------------------------------------------------
-
 #include <bits/stdc++.h>
 using namespace std;
 #define pb push_back
@@ -14,37 +11,20 @@ const int N = 1001;
 int c[N][N], fx[N], fy[N], matchX[N], matchY[N], trace[N], n,m,t, start, finish;
 pair<int,int> d[N];
 queue<int> q;
-int C (int x, int y) {
+int getC (int x, int y) {
     return c[x][y] - fx[x] - fy[y];
-}
-void in(){
-	memset(fx, 0, sizeof fx);
-	memset(fy, 0, sizeof fy);
-	memset(matchX, 0, sizeof matchX);
-	memset(matchY, 0, sizeof matchY);
-	
-	cin>>n>>m;
-	n=n>m?n:m;
-	for(int u=1;u<=n;u++)
-		for(int v=1;v<=n;v++)
-			c[u][v] = oo;
-	int a=1,b=1,z;
-	while(a!=0 && b!=0){
-		cin>>a>>b>>z;
-		c[a][b] =oo-z;
-	}
 }
 void initBFS() {
     q = queue<int>(); q.push(start);
     memset(trace, 0, sizeof trace);
-   	for(int v=1;v<=n;v++) d[v] = mp(C(start, v), start);
+   	for(int v=1;v<=n;v++) d[v] = mp(getC(start, v), start);
     finish = 0;
 }
 void BFS() {
     do {
         int u = q.front(); q.pop();
         for(int v=1;v<=n;v++) if (trace[v] == 0) {
-            int w = C(u,v);
+            int w = getC(u,v);
             if (w == 0) {
                 trace[v] = u;
                 if (matchY[v] == 0) {
@@ -79,7 +59,18 @@ void Enlarge() {
         finish = next;
     } while (finish);
 }
-void solve (){
+
+int main() {
+	cin>>n>>m>>t;
+	n=n>m?n:m;
+	for(int u=1;u<=n;u++)
+		for(int v=1;v<=n;v++)
+			c[u][v] = oo;
+	int x,y,z;
+	for(int i=1;i<=t;i++){
+		cin>>x>>y>>z;
+		c[x][y] =oo-z;
+	}
 	for(int u=1;u<=n;u++){
         start = u;
         initBFS();
@@ -89,17 +80,8 @@ void solve (){
         } while (!finish);
         Enlarge();
 	}
-}
-void out(){
 	int w = 0 , k = 0;
-	for(int u=1;u<=n;u++) if (c[u][matchX[u]] < oo)  w += (oo-c[u][matchX[u]]);
-	cout<<w<<endl;
-}
-int main() {
-	int test;cin>>test;
-	while(test--){
-		in();
-		solve();
-		out();
-	}
+	for(int u=1;u<=n;u++) if (c[u][matchX[u]] < oo)  w += (oo-c[u][matchX[u]]), k++;
+	cout<<w<<endl<<k<<endl;
+	for(int u=1;u<=n;u++) if (c[u][matchX[u]] < oo) cout<<u<<" "<<matchX[u]<<endl;
 }
